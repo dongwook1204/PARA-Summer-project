@@ -1,1 +1,1 @@
-# PARA-Summer-project
+프론트, 백엔드 부분 초안
