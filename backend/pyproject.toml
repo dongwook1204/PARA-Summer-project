@@ -1,0 +1,18 @@
+[project]
+name = "reloadk-backend"
+version = "0.1.0"
+description = "ReloadK FastAPI backend"
+requires-python = ">=3.10"
+dependencies = [
+"fastapi",
+"uvicorn[standard]",
+"pydantic>=2",
+"python-multipart",
+]
+
+
+[tool.uvicorn]
+factory = false
+host = "0.0.0.0"
+port = 8000
+reload = true
