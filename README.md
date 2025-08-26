@@ -1,1 +1,3 @@
-프론트, 백엔드 부분 초안
+# ReloadK Frontend
+
+Next.js + TailwindCSS + Framer Motion UI
