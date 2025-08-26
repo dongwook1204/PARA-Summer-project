@@ -5,8 +5,40 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from .store import STORE
 from .ai import generate_cards
+from .ai import ai_loader
+import os
+import jpype
+import jpype.imports  # 반드시 필요
 
 app = FastAPI(title="ReloadK API", version="0.1.0")
+
+# 정확한 JVM DLL 경로
+JVM_DLL_PATH = r"C:\Java\jdk-17\bin\server\jvm.dll"
+
+# 정확한 JAR 경로 (제공한 경로 그대로)
+classpath = r"C:\projects\PARA-Summer-project-main\PARA-Summer-project-main\.venv\Lib\site-packages\konlpy\java\open-korean-text-2.1.0.jar"
+
+@app.on_event("startup")
+async def startup_event():
+    if not jpype.isJVMStarted():
+        try:
+            jpype.startJVM(
+                JVM_DLL_PATH,
+                f"-Djava.class.path={classpath}",
+                convertStrings=False
+            )
+            print("JVM 시작 성공")
+        except Exception as e:
+            print(f"JVM 시작 실패: {e}")
+            raise
+    else:
+        print("JVM 이미 시작됨")
+
+    ai_loader.load_models()  # JVM이 시작된 이후에 호출됨
+
+@app.get("/")
+async def root():
+    return {"message": "ReloadK API is running"}
 
 app.add_middleware(
     CORSMiddleware,
